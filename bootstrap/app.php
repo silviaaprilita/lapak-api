@@ -18,6 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 ->group(function () {
                     require base_path('routes/api/identitas.php');
                     require base_path('routes/api/katalog.php');
+                    require base_path('routes/api/belanja.php');
                 });
         },
     )
