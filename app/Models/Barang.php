@@ -13,7 +13,8 @@ final class Barang extends Model
 {
     protected $table = 'barang';
 
-    protected $fillable = ['nama', 'slug', 'deskripsi', 'harga_rupiah', 'stok'];
+    // Tambahkan 'toko_id' ke dalam mass assignment fillable agar bisa disimpan
+    protected $fillable = ['toko_id', 'nama', 'slug', 'deskripsi', 'harga_rupiah', 'stok'];
 
     /**
      * LP-1: Integrasikan kolom basis data harga_rupiah langsung dengan Value Object Uang.
@@ -26,9 +27,6 @@ final class Barang extends Model
         );
     }
 
-    /**
-     * Mengetahui barang ini terdaftar di toko mana.
-     */
     public function toko(): BelongsTo
     {
         return $this->belongsTo(Toko::class, 'toko_id');

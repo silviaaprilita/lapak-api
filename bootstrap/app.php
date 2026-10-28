@@ -15,7 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('api')
                 ->prefix('api/v1')
                 ->name('v1.')
-                ->group(base_path('routes/api/identitas.php'));
+                ->group(function () {
+                    require base_path('routes/api/identitas.php');
+                    require base_path('routes/api/katalog.php');
+                });
         },
     )
     ->withMiddleware(function (Middleware $middleware) {

@@ -7,13 +7,14 @@ namespace App\Models;
 use App\Enums\StatusAkun;
 use Database\Factories\PenggunaFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Laravel\Sanctum\HasApiTokens; // <-- Impor pustaka baru ini
+use Laravel\Sanctum\HasApiTokens;
 
 final class Pengguna extends Authenticatable
 {
     /** @use HasFactory<PenggunaFactory> */
-    use HasFactory, HasApiTokens; // <-- Tambahkan HasApiTokens di sini
+    use HasFactory, HasApiTokens;
 
     protected $table = 'pengguna';
     
@@ -27,5 +28,13 @@ final class Pengguna extends Authenticatable
             'kata_sandi' => 'hashed',
             'status' => StatusAkun::class,
         ];
+    }
+
+    /**
+     * LP-4: Hubungan satu pengguna dapat memiliki maksimal satu toko UMKM.
+     */
+    public function toko(): HasOne
+    {
+        return $this->hasOne(Toko::class, 'pengguna_id');
     }
 }
