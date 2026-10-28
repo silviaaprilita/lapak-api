@@ -9,7 +9,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            PenggunaSeeder::class, // <-- Tambahkan baris ini
+            PenggunaSeeder::class,
+            KatalogSeeder::class, // <-- Tambahkan baris ini
         ]);
     }
 }
