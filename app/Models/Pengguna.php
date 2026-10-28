@@ -8,15 +8,15 @@ use App\Enums\StatusAkun;
 use Database\Factories\PenggunaFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Laravel\Sanctum\HasApiTokens; // <-- Impor pustaka baru ini
 
 final class Pengguna extends Authenticatable
 {
     /** @use HasFactory<PenggunaFactory> */
-    use HasFactory;
+    use HasFactory, HasApiTokens; // <-- Tambahkan HasApiTokens di sini
 
     protected $table = 'pengguna';
     
-    // Kolom 'status' sengaja tidak dimasukkan agar tidak bisa dimanipulasi klien lewat request
     protected $fillable = ['nama', 'surel', 'telepon', 'kata_sandi'];
     protected $hidden = ['kata_sandi'];
     protected $authPasswordName = 'kata_sandi';
