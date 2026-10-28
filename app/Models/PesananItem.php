@@ -1,36 +1,31 @@
 <?php
 
-use Illuminate\Database\Migrations\Migration;
-use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
+declare(strict_types=1);
 
-return new class extends Migration
+namespace App\Models;
+
+use App\Domain\Uang;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+final class PesananItem extends Model
 {
-    public function up(): void
-    {
-        // LP-13: Saldo digital untuk setiap pengguna terdaftar
-        Schema::create('dompet', function (Blueprint $tabel) {
-            $tabel->id();
-            $tabel->foreignId('pengguna_id')->unique()->constrained('pengguna')->cascadeOnDelete();
-            $tabel->unsignedInteger('saldo_rupiah')->default(0); // Memakai format integer murni (LP-1)
-            $tabel->timestamps();
-        });
+    protected $table = 'pesanan_item';
 
-        // LP-14: Catatan riwayat mutasi keuangan (Audit Trail)
-        Schema::create('catatan_saldo', function (Blueprint $tabel) {
-            $tabel->id();
-            $tabel->foreignId('dompet_id')->constrained('dompet')->cascadeOnDelete();
-            $tabel->string('jenis', 20)->index(); // masuk, keluar
-            $tabel->unsignedInteger('jumlah_rupiah');
-            $tabel->string('keterangan', 255);
-            $tabel->foreignId('pesanan_id')->nullable()->constrained('pesanan')->nullOnDelete(); // Terikat jika mutasi berasal dari transaksi
-            $tabel->timestamps();
-        });
+    // Tambahkan 'pesanan_id' dan field lainnya agar diizinkan masuk ke basis data
+    protected $fillable = ['pesanan_id', 'barang_id', 'nama_barang_arsip', 'harga_satuan_rupiah', 'kuantitas'];
+
+    protected function hargaSatuan(): Attribute
+    {
+        return Attribute::make(
+            get: fn (int $nilai) => Uang::dari($nilai),
+            set: fn (Uang $uang) => $uang->rupiah,
+        );
     }
 
-    public function down(): void
+    public function barang(): BelongsTo
     {
-        Schema::dropIfExists('catatan_saldo');
-        Schema::dropIfExists('dompet');
+        return $this->belongsTo(Barang::class, 'barang_id');
     }
-};
+}
