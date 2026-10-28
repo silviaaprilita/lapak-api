@@ -11,7 +11,8 @@ final class Keranjang extends Model
 {
     protected $table = 'keranjang';
 
-    protected $fillable = ['barang_id', 'kuantitas'];
+    // Daftarkan 'pengguna_id' di sini agar diizinkan masuk ke basis data
+    protected $fillable = ['pengguna_id', 'barang_id', 'kuantitas'];
 
     public function pembeli(): BelongsTo
     {

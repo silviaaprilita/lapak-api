@@ -3,7 +3,11 @@
 use App\Models\Barang;
 use App\Models\Pengguna;
 use App\Models\Toko;
+use Illuminate\Foundation\Testing\RefreshDatabase; // <-- Impor pustaka pengaman ini
 use Laravel\Sanctum\Sanctum;
+
+// Mengunci agar Pest wajib memuat seluruh migrasi (termasuk keranjang) sebelum tes dimulai
+uses(RefreshDatabase::class);
 
 it('pembeli dapat memasukkan produk katalog ke dalam keranjang (LP-7)', function () {
     // 1. Siapkan data toko dan barang
@@ -32,7 +36,7 @@ it('pembeli dapat memasukkan produk katalog ke dalam keranjang (LP-7)', function
         'kuantitas' => 2,
     ]);
 
-    // 4. Pastikan status 200/201 dan tercatat di database
+    // 4. Pastikan status 200 dan tercatat di database
     $response->assertStatus(200)
         ->assertJson([
             'sukses' => true,
@@ -59,7 +63,7 @@ it('menolak penambahan kuantitas keranjang jika melebihi batas batas maksimum 99
 
     $response = $this->postJson('/api/v1/keranjang', [
         'barang_id' => $barang->id,
-        'kuantitas' => 100, // Melebihi batas maksimal 99 unit
+        'kuantitas' => 100,
     ]);
 
     $response->assertStatus(422);
