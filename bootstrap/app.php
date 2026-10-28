@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     require base_path('routes/api/identitas.php');
                     require base_path('routes/api/katalog.php');
                     require base_path('routes/api/belanja.php');
+                    require base_path('routes/api/keuangan.php');
                 });
         },
     )
