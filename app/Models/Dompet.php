@@ -14,11 +14,9 @@ final class Dompet extends Model
 {
     protected $table = 'dompet';
 
-    protected $fillable = ['saldo_rupiah'];
+    // Daftarkan pengguna_id di sini agar diizinkan masuk ke basis data saat testing
+    protected $fillable = ['pengguna_id', 'saldo_rupiah'];
 
-    /**
-     * LP-1: Integrasikan kolom saldo langsung dengan Value Object Uang.
-     */
     protected function saldo(): Attribute
     {
         return Attribute::make(

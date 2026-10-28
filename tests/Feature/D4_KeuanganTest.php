@@ -8,6 +8,7 @@ use App\Models\Toko;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 
+// Mengunci agar Pest memuat seluruh migrasi finansial dompet & catatan_saldo
 uses(RefreshDatabase::class);
 
 it('dapat melepaskan dana transaksi ke dompet penjual setelah pesanan selesai (LP-12, LP-14)', function () {

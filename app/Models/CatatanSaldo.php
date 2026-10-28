@@ -13,7 +13,7 @@ final class CatatanSaldo extends Model
 {
     protected $table = 'catatan_saldo';
 
-    protected $fillable = ['jenis', 'jumlah_rupiah', 'keterangan', 'pesanan_id'];
+    protected $fillable = ['dompet_id', 'jenis', 'jumlah_rupiah', 'keterangan', 'pesanan_id'];
 
     protected function jumlah(): Attribute
     {
