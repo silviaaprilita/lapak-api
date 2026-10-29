@@ -19,8 +19,8 @@ return [
         'masa_hidup_hari' => (int) env('LAPAK_SESI_MASA_HIDUP_HARI', 7),
         'menganggur_menit' => (int) env('LAPAK_SESI_MENGANGGUR_MENIT', 120),
         'segar_menit' => (int) env('LAPAK_SESI_SEGAR_MENIT', 10),
-        // terakhir_dipakai_pada tidak ditulis ulang lebih sering dari ini.
         'jeda_sentuh_detik' => 60,
+        'simpan_hari' => 30,
     ],
     'laju' => [
         'masuk_per_akun' => 5,
