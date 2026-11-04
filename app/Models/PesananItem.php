@@ -11,10 +11,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 final class PesananItem extends Model
 {
-    protected $table = 'pesanan_item';
+    protected $table = 'butir_pesanan';
 
-    // Tambahkan 'pesanan_id' dan field lainnya agar diizinkan masuk ke basis data
-    protected $fillable = ['pesanan_id', 'barang_id', 'nama_barang_arsip', 'harga_satuan_rupiah', 'kuantitas'];
+    protected $fillable = ['pesanan_id', 'produk_id', 'nama_barang_arsip', 'harga_satuan_rupiah', 'kuantitas'];
 
     protected function hargaSatuan(): Attribute
     {
@@ -24,8 +23,8 @@ final class PesananItem extends Model
         );
     }
 
-    public function barang(): BelongsTo
+    public function produk(): BelongsTo
     {
-        return $this->belongsTo(Barang::class, 'barang_id');
+        return $this->belongsTo(Produk::class, 'produk_id');
     }
 }

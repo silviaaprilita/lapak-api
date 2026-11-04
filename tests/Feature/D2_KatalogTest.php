@@ -1,45 +1,44 @@
 <?php
 
+use App\Models\Kategori;
 use App\Models\Pengguna;
 use App\Models\Toko;
-use Laravel\Sanctum\Sanctum;
 
 it('pembeli dapat membuka toko baru (LP-4)', function () {
-    // 1. Siapkan pengguna terdaftar yang belum punya toko
-    $pembeli = Pengguna::factory()->create();
+    // 1. Siapkan pengguna terdaftar dengan peran pembeli
+    $pembeli = Pengguna::factory()->pembeli()->create();
 
-    // 2. Simulasikan pengguna masuk menggunakan token Sanctum
-    Sanctum::actingAs($pembeli);
-
-    // 3. Kirim request untuk membuat toko
-    $response = $this->postJson('/api/v1/toko', [
+    // 2. Kirim request membuat toko menggunakan autentikasi sesi ($this->sebagai)
+    $response = $this->sebagai($pembeli)->postJson('/api/v1/toko-saya', [
         'nama' => 'Keripik Solo Makmur',
+        'kota' => 'Surakarta',
+        'ongkir_rupiah' => 12000,
         'deskripsi' => 'Sentra keripik renyah rasa gurih asli Surakarta.',
     ]);
 
-    // 4. Pastikan statusnya 201 Created dan data masuk database
+    // 3. Pastikan status 201 Created dan data masuk basis data
     $response->assertStatus(201)
         ->assertJson([
             'sukses' => true,
             'data' => [
                 'nama' => 'Keripik Solo Makmur',
-                'slug' => 'keripik-solo-makmur',
-            ]
+            ],
         ]);
 
     $this->assertDatabaseHas('toko', [
-        'pengguna_id' => $pembeli->id,
+        'pemilik_id' => $pembeli->id,
         'nama' => 'Keripik Solo Makmur',
     ]);
 });
 
 it('menolak pembuatan toko jika nama sudah digunakan (LP-4)', function () {
     $tokoAda = Toko::factory()->create(['nama' => 'Toko Unik']);
-    $userBaru = Pengguna::factory()->create();
-    Sanctum::actingAs($userBaru);
+    $userBaru = Pengguna::factory()->pembeli()->create();
 
-    $response = $this->postJson('/api/v1/toko', [
+    $response = $this->sebagai($userBaru)->postJson('/api/v1/toko-saya', [
         'nama' => 'Toko Unik',
+        'kota' => 'Surakarta',
+        'ongkir_rupiah' => 10000,
         'deskripsi' => 'Mencoba menduplikat nama toko.',
     ]);
 
@@ -47,22 +46,22 @@ it('menolak pembuatan toko jika nama sudah digunakan (LP-4)', function () {
 });
 
 it('pemilik toko dapat menambahkan barang baru ke katalognya (LP-5)', function () {
-    // 1. Siapkan pemilik toko terdaftar
-    $pemilik = Pengguna::factory()->create();
-    $toko = Toko::create([
-        'pengguna_id' => $pemilik->id,
+    // 1. Siapkan pemilik toko (penjual) terdaftar
+    $pemilik = Pengguna::factory()->penjual()->create();
+    $toko = Toko::factory()->for($pemilik, 'pemilik')->create([
         'nama' => 'Batik Silvia Keren',
         'slug' => 'batik-silvia-keren',
     ]);
+    $kategori = Kategori::factory()->create();
 
-    Sanctum::actingAs($pemilik);
-
-    // 2. Tambah produk baru dengan harga integer murni (LP-1)
-    $response = $this->postJson("/api/v1/toko/barang", [
+    // 2. Tambah produk baru dengan autentikasi $this->sebagai
+    $response = $this->sebagai($pemilik)->postJson('/api/v1/toko-saya/produk', [
+        'kategori_id' => $kategori->id,
         'nama' => 'Kemeja Solo Estetik',
         'deskripsi' => 'Kemeja kain premium cap solo.',
         'harga_rupiah' => 150000,
         'stok' => 25,
+        'berat_gram' => 400,
     ]);
 
     // 3. Pastikan tersimpan dengan format amplop respons yang benar
@@ -71,12 +70,13 @@ it('pemilik toko dapat menambahkan barang baru ke katalognya (LP-5)', function (
             'sukses' => true,
             'data' => [
                 'nama' => 'Kemeja Solo Estetik',
-                'slug' => 'kemeja-solo-estetik',
-                'harga_rupiah' => 150000,
-            ]
+                'harga' => [
+                    'rupiah' => 150000,
+                ],
+            ],
         ]);
 
-    $this->assertDatabaseHas('barang', [
+    $this->assertDatabaseHas('produk', [
         'toko_id' => $toko->id,
         'nama' => 'Kemeja Solo Estetik',
         'harga_rupiah' => 150000,

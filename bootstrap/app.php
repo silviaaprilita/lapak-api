@@ -1,12 +1,14 @@
 <?php
 
+use App\Exceptions\GalatDomain;
+use App\Http\Middleware\PeriksaIzin;
+use App\Http\Middleware\SesiSegar;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Support\Facades\Route;
-use Illuminate\Auth\AuthenticationException;
-use App\Exceptions\GalatDomain;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -35,7 +37,8 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'sesi.segar' => \App\Http\Middleware\SesiSegar::class,
+            'sesi.segar' => SesiSegar::class,
+            'izin' => PeriksaIzin::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

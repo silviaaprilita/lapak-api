@@ -9,18 +9,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 final class Keranjang extends Model
 {
-    protected $table = 'keranjang';
+    protected $table = 'butir_keranjang';
 
-    // Daftarkan 'pengguna_id' di sini agar diizinkan masuk ke basis data
-    protected $fillable = ['pengguna_id', 'barang_id', 'kuantitas'];
+    protected $fillable = ['pengguna_id', 'produk_id', 'kuantitas'];
 
     public function pembeli(): BelongsTo
     {
         return $this->belongsTo(Pengguna::class, 'pengguna_id');
     }
 
-    public function barang(): BelongsTo
+    public function produk(): BelongsTo
     {
-        return $this->belongsTo(Barang::class, 'barang_id');
+        return $this->belongsTo(Produk::class, 'produk_id');
     }
 }

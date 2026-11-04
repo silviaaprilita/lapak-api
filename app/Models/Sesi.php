@@ -13,8 +13,9 @@ use LogicException;
 final class Sesi extends Model
 {
     protected $table = 'sesi';
-    
+
     protected $fillable = [];
+
     protected $hidden = ['hash_kunci'];
 
     // Menjamin kolom timestamp di bawah dibaca sebagai objek tanggal/datetime murni oleh PHP
@@ -35,7 +36,7 @@ final class Sesi extends Model
      * LP-14: Sesi berlaku bila belum dicabut, belum melewati
      * batas mutlak, dan belum menganggur terlalu lama.
      *
-     * @param Builder<Sesi> $kueri
+     * @param  Builder<Sesi>  $kueri
      */
     public function scopeBerlaku(Builder $kueri): void
     {

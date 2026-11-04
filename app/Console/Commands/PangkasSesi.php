@@ -10,6 +10,7 @@ use Illuminate\Console\Command;
 final class PangkasSesi extends Command
 {
     protected $signature = 'lapak:pangkas-sesi';
+
     protected $description = 'Menghapus sesi yang sudah mati lebih lama dari masa simpan.';
 
     public function handle(): int

@@ -24,7 +24,7 @@ trait ResponsApi
     }
 
     /**
-     * @param class-string<JsonResource> $resource
+     * @param  class-string<JsonResource>  $resource
      */
     protected function berhalaman(LengthAwarePaginator $halaman, string $resource): JsonResponse
     {

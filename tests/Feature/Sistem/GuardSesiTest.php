@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\StatusAkun;
 use App\Models\Pengguna;
 use App\Models\Sesi;
 use App\Services\PenerbitSesi;
@@ -25,7 +26,7 @@ it('menjawab 401 berbentuk kontrak bila kunci tidak ada', function () {
                 'kode' => 'BELUM_MASUK',
                 'pesan' => 'Anda belum masuk atau sesi tidak berlaku.',
                 'rincian' => null,
-            ]
+            ],
         ]);
 });
 
@@ -53,7 +54,7 @@ it('menolak kunci begitu sesinya dicabut', function () {
 
 it('menolak kunci begitu akunnya ditangguhkan', function () {
     $this->sebagai($this->pengguna)->getJson('/api/_uji/terlindung')->assertOk();
-    $this->pengguna->forceFill(['status' => \App\Enums\StatusAkun::Ditangguhkan])->save();
+    $this->pengguna->forceFill(['status' => StatusAkun::Ditangguhkan])->save();
     $this->getJson('/api/_uji/terlindung')->assertUnauthorized();
 });
 
@@ -82,6 +83,6 @@ it('meloloskan tindakan sensitif hanya pada sesi segar (LP-15)', function () {
                 'kode' => 'LP-15',
                 'pesan' => 'Tindakan ini menuntut konfirmasi ulang kata sandi.',
                 'rincian' => ['konfirmasi' => 'POST /api/v1/sesi/konfirmasi'],
-            ]
+            ],
         ]);
 });

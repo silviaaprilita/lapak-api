@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Route;
 */
 const RUTE_PUBLIK = [
     'POST api/v1/registrasi',
-    'POST api/v1/login',
+    'POST api/v1/masuk',
 ];
 
 /** @return list<array{0: string, 1: Rute}> pasangan "METODE alamat" dan rutenya */
@@ -26,16 +26,16 @@ function ruteApi(): array
             $daftar[] = ["{$metode} {$rute->uri()}", $rute];
         }
     }
+
     return $daftar;
 }
 
 it('memasang auth:sesi pada setiap rute yang tidak terdaftar publik', function () {
     $terbuka = [];
     foreach (ruteApi() as [$nama, $rute]) {
-        // Checking if either auth:sanctum or our auth:sesi is applied
         $middleware = $rute->gatherMiddleware();
-        $terlindung = in_array('auth:sesi', $middleware, true) || in_array('auth:sanctum', $middleware, true);
-        
+        $terlindung = in_array('auth:sesi', $middleware, true);
+
         if (! $terlindung && ! in_array($nama, RUTE_PUBLIK, true)) {
             $terbuka[] = $nama;
         }

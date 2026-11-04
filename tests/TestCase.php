@@ -5,12 +5,20 @@ namespace Tests;
 use App\Models\Pengguna;
 use App\Models\Sesi;
 use App\Services\PenerbitSesi;
+use Database\Seeders\PeranIzinSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
     /** Sesi yang diterbitkan pemanggilan sebagai() terakhir. */
     protected ?Sesi $sesiUji = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(PeranIzinSeeder::class);
+    }
 
     /**
      * Masuk sebagai seorang pengguna dengan kunci sesi SUNGGUHAN.
@@ -23,6 +31,7 @@ abstract class TestCase extends BaseTestCase
         if (! $segar) {
             $this->sesiUji->forceFill(['dikonfirmasi_pada' => now()->subHour()])->save();
         }
+
         return $this->denganKunci($kunci);
     }
 
@@ -43,6 +52,7 @@ abstract class TestCase extends BaseTestCase
         $method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null,
     ) {
         $this->app['auth']->forgetGuards();
+
         return parent::call($method, $uri, $parameters, $cookies, $files, $server, $content);
     }
 }
