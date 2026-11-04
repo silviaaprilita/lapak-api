@@ -16,9 +16,9 @@ final class Pesanan extends Model
 
     // Tambahkan 'pembeli_id' ke dalam mass assignment agar diizinkan masuk ke basis data
     protected $fillable = [
-        'nomor_invoice', 'pembeli_id', 'toko_id', 'total_barang_rupiah', 
-        'komisi_marketplace_rupiah', 'total_transfer_rupiah', 
-        'status_pesanan', 'nomor_resi', 'batas_bayar_pada', 'dilepas_otomatis_pada'
+        'nomor_invoice', 'pembeli_id', 'toko_id', 'total_barang_rupiah',
+        'komisi_marketplace_rupiah', 'total_transfer_rupiah',
+        'status_pesanan', 'nomor_resi', 'batas_bayar_pada', 'dilepas_otomatis_pada',
     ];
 
     protected function casts(): array

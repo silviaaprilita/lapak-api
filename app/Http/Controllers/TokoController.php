@@ -17,6 +17,8 @@ final class TokoController extends Controller
         $data = $request->validate([
             'nama' => ['required', 'string', 'max:100', 'unique:toko,nama'],
             'deskripsi' => ['nullable', 'string'],
+            'kota' => ['nullable', 'string', 'max:100'],
+            'ongkir_rupiah' => ['nullable', 'integer', 'min:0'],
         ]);
 
         // LP-4: Hubungkan toko baru dengan ID pengguna yang sedang login
@@ -25,12 +27,16 @@ final class TokoController extends Controller
             'nama' => $data['nama'],
             'slug' => Str::slug($data['nama']),
             'deskripsi' => $data['deskripsi'] ?? null,
+            'kota' => $data['kota'] ?? null,
+            'ongkir_rupiah' => $data['ongkir_rupiah'] ?? null,
         ]);
 
         return $this->sukses([
             'id' => $toko->id,
             'nama' => $toko->nama,
             'slug' => $toko->slug,
+            'kota' => $toko->kota,
+            'ongkir_rupiah' => $toko->ongkir_rupiah,
         ], 201);
     }
 

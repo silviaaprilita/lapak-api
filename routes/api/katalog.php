@@ -3,8 +3,10 @@
 use App\Http\Controllers\TokoController;
 use Illuminate\Support\Facades\Route;
 
-// Seluruh rute toko membutuhkan login aktif (auth:sanctum)
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('/toko', [TokoController::class, 'buatToko'])->name('toko.buat');
-    Route::post('/toko/barang', [TokoController::class, 'tambahBarang'])->name('toko.barang.tambah');
+Route::middleware('auth:sesi')->group(function (): void {
+    Route::post('toko-saya', [TokoController::class, 'buatToko'])->name('toko-saya.buat');
+    Route::post('toko-saya/barang', [TokoController::class, 'tambahBarang'])->name('toko-saya.barang.tambah');
+
+    Route::post('toko', [TokoController::class, 'buatToko'])->name('toko.buat');
+    Route::post('toko/barang', [TokoController::class, 'tambahBarang'])->name('toko.barang.tambah');
 });

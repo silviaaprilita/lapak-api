@@ -16,7 +16,7 @@ final class PenerbitSesi
 {
     /**
      * @return array{0: Sesi, 1: string} sesi dan kunci utuhnya. Kunci utuh hanya ada di sini,
-     * saat ini; setelah fungsi ini selesai tidak dapat diperoleh lagi.
+     *                                   saat ini; setelah fungsi ini selesai tidak dapat diperoleh lagi.
      */
     public function terbitkan(
         Pengguna $pengguna,
@@ -50,6 +50,7 @@ final class PenerbitSesi
     {
         $kunci = KunciSesi::baru($sesi->pengenal);
         $sesi->forceFill(['hash_kunci' => $kunci->hash()])->save();
+
         return $kunci->teks();
     }
 

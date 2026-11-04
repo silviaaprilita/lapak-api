@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Http\Requests\KonfirmasiSandiRequest;
+use App\Models\Sesi;
 use App\Services\PemeriksaKataSandi;
 use App\Services\PenerbitSesi;
-use App\Models\Sesi;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -19,7 +19,7 @@ final class SesiController extends Controller
     public function saya(Request $request): JsonResponse
     {
         $sesi = Sesi::dariPermintaan($request);
-        
+
         return $this->sukses([
             'pengguna' => [
                 'id' => $request->user()->id,
@@ -59,6 +59,7 @@ final class SesiController extends Controller
     public function keluar(Request $request): JsonResponse
     {
         $this->penerbit->cabut(Sesi::dariPermintaan($request));
+
         return $this->sukses(null);
     }
 
@@ -71,8 +72,8 @@ final class SesiController extends Controller
                 'galat' => [
                     'kode' => 'KREDENSIAL_SALAH',
                     'pesan' => 'Kata sandi salah.',
-                    'rincian' => null
-                ]
+                    'rincian' => null,
+                ],
             ], 422);
         }
 
@@ -85,7 +86,7 @@ final class SesiController extends Controller
             'sesi' => [
                 'pengenal' => $sesi->pengenal,
                 'segar' => true,
-            ]
+            ],
         ]);
     }
 
@@ -99,6 +100,7 @@ final class SesiController extends Controller
             ->firstOrFail();
 
         $this->penerbit->cabut($sesi);
+
         return $this->sukses(null);
     }
 }

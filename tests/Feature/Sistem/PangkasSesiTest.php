@@ -17,7 +17,7 @@ it('memangkas sesi yang sudah lama mati dan membiarkan sisanya', function () {
 
     // 2. Session that naturally expired 40 days ago (Should be deleted)
     [$kedaluwarsaLama] = $penerbit->terbitkan($pengguna, 'Kedaluwarsa lama');
-    
+
     $this->travel(40)->days();
 
     // 3. Session that was revoked yesterday (Should be kept as logs)

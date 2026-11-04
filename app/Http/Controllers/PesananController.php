@@ -60,7 +60,7 @@ final class PesananController extends Controller
 
             // 4. LP-9: Buat dokumen nomor invoice unik dan simpan pesanan utama
             $nomorInvoice = 'INV-'.now()->format('YmdHis').'-'.$pembeli->id;
-            
+
             $pesananBaru = Pesanan::create([
                 'nomor_invoice' => $nomorInvoice,
                 'pembeli_id' => $pembeli->id,

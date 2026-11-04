@@ -17,11 +17,14 @@ class TokoFactory extends Factory
     public function definition(): array
     {
         $nama = fake()->unique()->company();
+
         return [
             'pengguna_id' => Pengguna::factory(),
             'nama' => $nama,
             'slug' => Str::slug($nama),
             'deskripsi' => fake()->sentence(),
+            'kota' => fake()->city(),
+            'ongkir_rupiah' => fake()->numberBetween(0, 50000),
         ];
     }
 }

@@ -14,12 +14,14 @@ use Laravel\Sanctum\HasApiTokens;
 final class Pengguna extends Authenticatable
 {
     /** @use HasFactory<PenggunaFactory> */
-    use HasFactory, HasApiTokens;
+    use HasApiTokens, HasFactory;
 
     protected $table = 'pengguna';
-    
+
     protected $fillable = ['nama', 'surel', 'telepon', 'kata_sandi'];
+
     protected $hidden = ['kata_sandi'];
+
     protected $authPasswordName = 'kata_sandi';
 
     protected function casts(): array

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\JenisDompet;
 use App\Models\Dompet;
 use App\Models\Pesanan;
 use Illuminate\Http\JsonResponse;
@@ -42,7 +43,11 @@ final class DompetController extends Controller
             // 4. Cari atau buat dompet milik toko/penjual tujuan
             $dompetPenjual = Dompet::firstOrCreate(
                 ['pengguna_id' => $pesanan->toko->pengguna_id],
-                ['saldo_rupiah' => 0]
+                [
+                    'kode' => 'penjual:'.$pesanan->toko->pengguna_id,
+                    'jenis' => JenisDompet::Penjual,
+                    'saldo_rupiah' => 0,
+                ]
             );
 
             // 5. Tambahkan saldo bersih ke dompet penjual

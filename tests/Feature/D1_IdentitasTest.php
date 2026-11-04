@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Pengguna;
 use App\Enums\StatusAkun;
+use App\Models\Pengguna;
 use Illuminate\Support\Facades\Hash;
 
 it('dapat mendaftarkan pengguna baru dengan data valid (LP-2)', function () {
@@ -19,8 +19,11 @@ it('dapat mendaftarkan pengguna baru dengan data valid (LP-2)', function () {
             'data' => [
                 'nama' => 'Silvia Aprilita',
                 'surel' => 'silvia@student.uns.ac.id',
+                'status' => StatusAkun::Aktif->value,
             ],
-        ]);
+        ])
+        ->assertJsonStructure(['data' => ['id']])
+        ->assertJsonMissingPath('data.kata_sandi');
 
     // Memastikan data benar-benar masuk ke database MySQL
     $this->assertDatabaseHas('pengguna', [
@@ -51,19 +54,20 @@ it('dapat melakukan login dengan kredensial yang valid (LP-3)', function () {
     // Buat akun contoh menggunakan seeder yang sudah ada
     $this->artisan('db:seed', ['--class' => 'PenggunaSeeder']);
 
-    $response = $this->postJson('/api/v1/login', [
+    $response = $this->postJson('/api/v1/masuk', [
         'surel' => 'sri@lapak.test',
         'kata_sandi' => 'LapakContoh#2026',
+        'nama_perangkat' => 'Laptop Sri',
     ]);
 
-    // Memastikan sukses login dan mengembalikan token sesi sesuai kontrak
-    $response->assertStatus(200)
+    // Memastikan sukses login dan mengembalikan kunci sesi sesuai kontrak
+    $response->assertCreated()
         ->assertJson([
             'sukses' => true,
         ])
         ->assertJsonStructure([
             'data' => [
-                'token_akses',
+                'kunci',
                 'pengguna' => ['id', 'nama', 'surel'],
             ],
         ]);
@@ -72,9 +76,10 @@ it('dapat melakukan login dengan kredensial yang valid (LP-3)', function () {
 it('menolak login jika kata sandi salah (LP-3)', function () {
     $this->artisan('db:seed', ['--class' => 'PenggunaSeeder']);
 
-    $response = $this->postJson('/api/v1/login', [
+    $response = $this->postJson('/api/v1/masuk', [
         'surel' => 'sri@lapak.test',
         'kata_sandi' => 'SandiSalah#123',
+        'nama_perangkat' => 'Laptop Sri',
     ]);
 
     // Gagal otentikasi mengembalikan status HTTP 401 (Unauthorized)

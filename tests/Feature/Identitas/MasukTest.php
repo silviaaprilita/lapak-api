@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Pengguna;
-use App\Models\Sesi;
 use Illuminate\Support\Facades\DB;
 
 beforeEach(function () {
@@ -17,7 +16,7 @@ it('menerbitkan kunci sesi yang langsung dapat dipakai', function () {
     $respons = ($this->masuk)()
         ->assertCreated()
         ->assertJsonPath('data.pengguna.surel', 'sri@lapak.test');
-        
+
     $kunci = $respons->json('data.kunci');
     expect($kunci)->toMatch('/^lpk_[0-9A-Z]{26}\.[0-9a-f]{64}$/');
 });

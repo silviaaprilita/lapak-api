@@ -28,4 +28,14 @@ class PenggunaFactory extends Factory
     {
         return $this->state(['status' => StatusAkun::Ditangguhkan]);
     }
+
+    public function pembeli(): static
+    {
+        return $this->state(fn (array $attributes) => []);
+    }
+
+    public function penjual(): static
+    {
+        return $this->state(fn (array $attributes) => []);
+    }
 }

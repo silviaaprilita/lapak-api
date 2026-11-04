@@ -20,6 +20,7 @@ final readonly class Uang implements JsonSerializable
         if ($rupiah < 0) {
             throw new InvalidArgumentException('Nilai uang tidak boleh negatif.');
         }
+
         return new self($rupiah);
     }
 
@@ -38,6 +39,7 @@ final readonly class Uang implements JsonSerializable
         if ($lain->rupiah > $this->rupiah) {
             throw new InvalidArgumentException('Pengurangan menghasilkan nilai negatif.');
         }
+
         return new self($this->rupiah - $lain->rupiah);
     }
 
@@ -46,6 +48,7 @@ final readonly class Uang implements JsonSerializable
         if ($pengali < 0) {
             throw new InvalidArgumentException('Pengali tidak boleh negatif.');
         }
+
         return new self($this->rupiah * $pengali);
     }
 
@@ -58,6 +61,7 @@ final readonly class Uang implements JsonSerializable
         if ($persen < 0 || $persen > 100) {
             throw new InvalidArgumentException('Persentase harus di antara 0 dan 100.');
         }
+
         return new self(intdiv($this->rupiah * $persen + 50, 100));
     }
 

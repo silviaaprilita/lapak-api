@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\StatusAkun;
 use App\Models\Pengguna;
 use App\Models\Sesi;
 use App\Services\PemeriksaSesi;
@@ -55,7 +56,7 @@ it('menolak sesi berumur lebih dari tujuh hari walau terus dipakai', function ()
 });
 
 it('menolak kunci milik akun yang ditangguhkan', function () {
-    $this->pengguna->forceFill(['status' => \App\Enums\StatusAkun::Ditangguhkan])->save();
+    $this->pengguna->forceFill(['status' => StatusAkun::Ditangguhkan])->save();
     expect($this->pemeriksa->periksa($this->kunci))->toBeNull();
 });
 

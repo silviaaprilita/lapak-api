@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Domain\Uang;
+use App\Enums\JenisDompet;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -14,8 +15,14 @@ final class Dompet extends Model
 {
     protected $table = 'dompet';
 
-    // Daftarkan pengguna_id di sini agar diizinkan masuk ke basis data saat testing
-    protected $fillable = ['pengguna_id', 'saldo_rupiah'];
+    protected $fillable = ['kode', 'jenis', 'pengguna_id', 'saldo_rupiah'];
+
+    protected function casts(): array
+    {
+        return [
+            'jenis' => JenisDompet::class,
+        ];
+    }
 
     protected function saldo(): Attribute
     {
