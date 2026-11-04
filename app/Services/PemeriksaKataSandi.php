@@ -19,6 +19,7 @@ final class PemeriksaKataSandi
     public function cocok(?Pengguna $pengguna, string $kataSandi): bool
     {
         $hash = $pengguna->kata_sandi ?? (self::$hashUmpan ??= Hash::make(Str::random(40)));
+
         return Hash::check($kataSandi, $hash) && $pengguna !== null;
     }
 }

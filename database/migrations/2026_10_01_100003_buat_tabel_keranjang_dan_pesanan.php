@@ -15,7 +15,7 @@ return new class extends Migration
             $tabel->foreignId('barang_id')->constrained('barang')->cascadeOnDelete();
             $tabel->unsignedInteger('kuantitas');
             $tabel->timestamps();
-            
+
             $tabel->unique(['pengguna_id', 'barang_id']);
         });
 

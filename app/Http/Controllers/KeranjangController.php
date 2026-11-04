@@ -41,7 +41,7 @@ final class KeranjangController extends Controller
                 'barang_id' => $data['barang_id'],
             ],
             [
-                'kuantitas' => $sudahAdaDiKeranjang 
+                'kuantitas' => $sudahAdaDiKeranjang
                     ? min(99, Keranjang::where('pengguna_id', $pengguna->id)->where('barang_id', $data['barang_id'])->value('kuantitas') + $data['kuantitas'])
                     : $data['kuantitas'],
             ]

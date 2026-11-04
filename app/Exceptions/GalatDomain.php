@@ -13,7 +13,7 @@ use RuntimeException;
 class GalatDomain extends RuntimeException
 {
     /**
-     * @param array<string, mixed> $rincian
+     * @param  array<string, mixed>  $rincian
      */
     public function __construct(
         public readonly string $kode,

@@ -16,7 +16,7 @@ final class Toko extends Model
     use HasFactory;
 
     protected $table = 'toko';
-    
+
     protected $fillable = ['pengguna_id', 'nama', 'slug', 'deskripsi'];
 
     public function pemilik(): BelongsTo

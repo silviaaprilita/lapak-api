@@ -17,6 +17,7 @@ class TokoFactory extends Factory
     public function definition(): array
     {
         $nama = fake()->unique()->company();
+
         return [
             'pengguna_id' => Pengguna::factory(),
             'nama' => $nama,

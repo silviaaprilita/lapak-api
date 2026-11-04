@@ -15,7 +15,7 @@ namespace App\Domain\Sesi;
 final readonly class KunciSesi
 {
     public const AWALAN = 'lpk_';
-    
+
     // Pengubah D penting: tanpa D, tanda $ ikut cocok tepat sebelum baris baru di ujung teks.
     private const POLA = '/^lpk_([0-9A-HJKMNP-TV-Z]{26})\.([0-9a-f]{64})$/D';
 
@@ -34,6 +34,7 @@ final readonly class KunciSesi
         if (preg_match(self::POLA, $teks, $bagian) !== 1) {
             return null;
         }
+
         return new self($bagian[1], $bagian[2]);
     }
 

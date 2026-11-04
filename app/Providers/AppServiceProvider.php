@@ -41,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $request->attributes->set('sesi', $sesi);
-            
+
             // Yang masuk log hanya pengenal sesi tunggal, token utuh rahasia tetap aman
             Log::withContext(['sesi' => $sesi->pengenal, 'pengguna' => $sesi->pengguna_id]);
 

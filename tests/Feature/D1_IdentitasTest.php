@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Pengguna;
 use App\Enums\StatusAkun;
+use App\Models\Pengguna;
 use Illuminate\Support\Facades\Hash;
 
 it('dapat mendaftarkan pengguna baru dengan data valid (LP-2)', function () {

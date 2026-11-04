@@ -26,6 +26,7 @@ function ruteApi(): array
             $daftar[] = ["{$metode} {$rute->uri()}", $rute];
         }
     }
+
     return $daftar;
 }
 
@@ -35,7 +36,7 @@ it('memasang auth:sesi pada setiap rute yang tidak terdaftar publik', function (
         // Checking if either auth:sanctum or our auth:sesi is applied
         $middleware = $rute->gatherMiddleware();
         $terlindung = in_array('auth:sesi', $middleware, true) || in_array('auth:sanctum', $middleware, true);
-        
+
         if (! $terlindung && ! in_array($nama, RUTE_PUBLIK, true)) {
             $terbuka[] = $nama;
         }

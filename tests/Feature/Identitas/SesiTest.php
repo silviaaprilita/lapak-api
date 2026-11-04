@@ -20,7 +20,7 @@ it('menjawab siapa saya tanpa membocorkan kata sandi maupun hash kunci', functio
 
 it('mencabut hanya sesi yang sedang dipakai saat keluar', function () {
     [, $kunciPonsel] = ($this->terbit)($this->sri, 'Ponsel');
-    
+
     $this->sebagai($this->sri)->postJson('/api/v1/keluar')->assertOk();
     $this->getJson('/api/v1/saya')->assertUnauthorized(); // laptop key dies
     $this->denganKunci($kunciPonsel)->getJson('/api/v1/saya')->assertOk(); // phone stays alive
@@ -36,7 +36,7 @@ it('menyegarkan sesi dan mengganti kuncinya setelah kata sandi dikonfirmasi', fu
         ->json('data.kunci');
 
     // Changed to toBe(1) because the token is rotated inside the SAME row, maintaining database efficiency!
-    expect($kunciBaru)->not->toBe($kunciLama)->and(Sesi::count())->toBe(1); 
+    expect($kunciBaru)->not->toBe($kunciLama)->and(Sesi::count())->toBe(1);
     $this->denganKunci($kunciLama)->getJson('/api/v1/saya')->assertUnauthorized();
     $this->denganKunci($kunciBaru)->getJson('/api/v1/saya')->assertOk();
 });

@@ -23,6 +23,7 @@ abstract class TestCase extends BaseTestCase
         if (! $segar) {
             $this->sesiUji->forceFill(['dikonfirmasi_pada' => now()->subHour()])->save();
         }
+
         return $this->denganKunci($kunci);
     }
 
@@ -43,6 +44,7 @@ abstract class TestCase extends BaseTestCase
         $method, $uri, $parameters = [], $cookies = [], $files = [], $server = [], $content = null,
     ) {
         $this->app['auth']->forgetGuards();
+
         return parent::call($method, $uri, $parameters, $cookies, $files, $server, $content);
     }
 }

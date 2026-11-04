@@ -24,7 +24,7 @@ it('pembeli dapat membuka toko baru (LP-4)', function () {
             'data' => [
                 'nama' => 'Keripik Solo Makmur',
                 'slug' => 'keripik-solo-makmur',
-            ]
+            ],
         ]);
 
     $this->assertDatabaseHas('toko', [
@@ -58,7 +58,7 @@ it('pemilik toko dapat menambahkan barang baru ke katalognya (LP-5)', function (
     Sanctum::actingAs($pemilik);
 
     // 2. Tambah produk baru dengan harga integer murni (LP-1)
-    $response = $this->postJson("/api/v1/toko/barang", [
+    $response = $this->postJson('/api/v1/toko/barang', [
         'nama' => 'Kemeja Solo Estetik',
         'deskripsi' => 'Kemeja kain premium cap solo.',
         'harga_rupiah' => 150000,
@@ -73,7 +73,7 @@ it('pemilik toko dapat menambahkan barang baru ke katalognya (LP-5)', function (
                 'nama' => 'Kemeja Solo Estetik',
                 'slug' => 'kemeja-solo-estetik',
                 'harga_rupiah' => 150000,
-            ]
+            ],
         ]);
 
     $this->assertDatabaseHas('barang', [

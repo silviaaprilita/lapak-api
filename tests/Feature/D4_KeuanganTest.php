@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Barang;
 use App\Models\Dompet;
 use App\Models\Pengguna;
 use App\Models\Pesanan;
@@ -19,7 +18,7 @@ it('dapat melepaskan dana transaksi ke dompet penjual setelah pesanan selesai (L
 
     // 2. Siapkan Akun Pembeli dan Transaksi Pesanan yang sudah dibayar
     $pembeli = Pengguna::factory()->create();
-    
+
     // Total Belanja: Rp 200.000, Komisi 5%: Rp 10.000. Bagian Penjual: Rp 190.000
     $pesanan = Pesanan::create([
         'nomor_invoice' => 'INV-TEST-001',
@@ -42,7 +41,7 @@ it('dapat melepaskan dana transaksi ke dompet penjual setelah pesanan selesai (L
             'sukses' => true,
             'data' => [
                 'status_pesanan' => 'selesai',
-            ]
+            ],
         ]);
 
     // 5. LP-12: Pastikan saldo dompet penjual bertambah Rp 190.000 (Rp 200.000 - Rp 10.000)

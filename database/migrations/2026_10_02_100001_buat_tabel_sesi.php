@@ -24,7 +24,7 @@ return new class extends Migration
             $tabel->timestamp('kedaluwarsa_pada');
             $tabel->timestamp('dicabut_pada')->nullable();
             $tabel->timestamps();
-            
+
             $tabel->index(['pengguna_id', 'dicabut_pada']);
         });
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Barang;
+use App\Models\Keranjang;
 use App\Models\Pengguna;
 use App\Models\Toko;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -16,7 +17,7 @@ it('pembeli dapat memasukkan produk katalog ke dalam keranjang (LP-7)', function
         'nama' => 'Oleh-oleh Solo Asli',
         'slug' => 'oleh-oleh-solo-asli',
     ]);
-    
+
     $barang = Barang::create([
         'toko_id' => $toko->id,
         'nama' => 'Serabi Lezat',
@@ -42,7 +43,7 @@ it('pembeli dapat memasukkan produk katalog ke dalam keranjang (LP-7)', function
             'data' => [
                 'barang_id' => $barang->id,
                 'kuantitas' => 2,
-            ]
+            ],
         ]);
 
     $this->assertDatabaseHas('keranjang', [
@@ -76,7 +77,7 @@ it('pembeli dapat membuat pesanan resmi dari barang di keranjang (LP-8, LP-9, LP
 
     $pembeli = Pengguna::factory()->create();
     // Masukkan barang ke keranjang pembeli terlebih dahulu
-    \App\Models\Keranjang::create(['pengguna_id' => $pembeli->id, 'barang_id' => $barang->id, 'kuantitas' => 2]);
+    Keranjang::create(['pengguna_id' => $pembeli->id, 'barang_id' => $barang->id, 'kuantitas' => 2]);
 
     Sanctum::actingAs($pembeli);
 
@@ -95,7 +96,7 @@ it('pembeli dapat membuat pesanan resmi dari barang di keranjang (LP-8, LP-9, LP
                 'komisi_marketplace_rupiah' => 20000,
                 'total_transfer_rupiah' => 400000,
                 'status_pesanan' => 'dibuat',
-            ]
+            ],
         ]);
 
     // 3. Pastikan data tercatat di database pesanan utama dan keranjang dikosongkan
