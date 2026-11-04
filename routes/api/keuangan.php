@@ -4,5 +4,7 @@ use App\Http\Controllers\DompetController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sesi')->group(function () {
-    Route::post('/pesanan/{id}/selesai', [DompetController::class, 'selesaikanPesanan'])->name('pesanan.selesai');
+    Route::post('pesanan/{id}/selesai', [DompetController::class, 'selesaikanPesanan'])
+        ->middleware('izin:pesanan.buat')
+        ->name('pesanan.selesai');
 });

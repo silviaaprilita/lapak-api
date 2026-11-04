@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\StatusToko;
 use App\Models\Pengguna;
 use App\Models\Toko;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -19,12 +20,13 @@ class TokoFactory extends Factory
         $nama = fake()->unique()->company();
 
         return [
-            'pengguna_id' => Pengguna::factory(),
+            'pemilik_id' => Pengguna::factory(),
             'nama' => $nama,
             'slug' => Str::slug($nama),
+            'kota' => fake()->randomElement(['Surakarta', 'Sukoharjo', 'Karanganyar', 'Boyolali']),
             'deskripsi' => fake()->sentence(),
-            'kota' => fake()->city(),
-            'ongkir_rupiah' => fake()->numberBetween(0, 50000),
+            'ongkir_rupiah' => fake()->randomElement([8000, 10000, 12000, 15000]),
+            'status' => StatusToko::Aktif,
         ];
     }
 }

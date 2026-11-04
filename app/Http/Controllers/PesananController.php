@@ -23,10 +23,10 @@ final class PesananController extends Controller
 
         // 1. Ambil butir keranjang belanja milik pembeli dari toko yang dipilih
         $butirKeranjang = Keranjang::where('pengguna_id', $pembeli->id)
-            ->whereHas('barang', function ($query) use ($data) {
+            ->whereHas('produk', function ($query) use ($data) {
                 $query->where('toko_id', $data['toko_id']);
             })
-            ->with('barang')
+            ->with('produk')
             ->get();
 
         if ($butirKeranjang->isEmpty()) {
@@ -43,13 +43,13 @@ final class PesananController extends Controller
 
             // 2. Hitung total belanjaan dan siapkan arsip butir pesanan
             foreach ($butirKeranjang as $item) {
-                $subTotal = $item->barang->harga_rupiah * $item->kuantitas;
+                $subTotal = $item->produk->harga_rupiah * $item->kuantitas;
                 $totalBarangRupiah += $subTotal;
 
                 $itemData[] = [
-                    'barang_id' => $item->barang_id,
-                    'nama_barang_arsip' => $item->barang->nama,
-                    'harga_satuan_rupiah' => $item->barang->harga_rupiah,
+                    'produk_id' => $item->produk_id,
+                    'nama_barang_arsip' => $item->produk->nama,
+                    'harga_satuan_rupiah' => $item->produk->harga_rupiah,
                     'kuantitas' => $item->kuantitas,
                 ];
             }
@@ -79,7 +79,7 @@ final class PesananController extends Controller
 
             // 6. Kosongkan keranjang belanja pembeli untuk toko tersebut
             Keranjang::where('pengguna_id', $pembeli->id)
-                ->whereIn('barang_id', $butirKeranjang->pluck('barang_id'))
+                ->whereIn('produk_id', $butirKeranjang->pluck('produk_id'))
                 ->delete();
 
             return $pesananBaru;

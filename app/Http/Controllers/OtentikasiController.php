@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Enums\NamaPeran;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegistrasiRequest;
+use App\Http\Resources\PenggunaResource;
 use App\Models\Pengguna;
+use App\Models\Peran;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 
@@ -22,12 +25,12 @@ final class OtentikasiController extends Controller
             'telepon' => $data['telepon'] ?? null,
             'kata_sandi' => $data['kata_sandi'],
         ]);
+        $peranPembeli = Peran::query()
+            ->where('nama', NamaPeran::Pembeli->value)
+            ->firstOrFail();
+        $pengguna->peran()->attach($peranPembeli->id);
 
-        return $this->sukses([
-            'id' => $pengguna->id,
-            'nama' => $pengguna->nama,
-            'surel' => $pengguna->surel,
-        ], 201);
+        return $this->sukses(PenggunaResource::make($pengguna->refresh()), 201);
     }
 
     public function login(LoginRequest $request): JsonResponse

@@ -12,6 +12,10 @@ Route::middleware('auth:sesi')->group(function (): void {
     Route::get('saya', [SesiController::class, 'saya'])->name('saya');
     Route::post('keluar', [SesiController::class, 'keluar'])->name('keluar');
     Route::get('sesi', [SesiController::class, 'index'])->name('sesi.index');
-    Route::post('sesi/konfirmasi', [SesiController::class, 'konfirmasi'])->name('sesi.konfirmasi');
-    Route::delete('sesi/{pengenal}', [SesiController::class, 'destroy'])->name('sesi.destroy');
+    Route::post('sesi/konfirmasi', [SesiController::class, 'konfirmasi'])
+        ->middleware('throttle:konfirmasi');
+
+    Route::delete('sesi/{pengenal}', [SesiController::class, 'destroy'])
+        ->middleware('sesi.segar')
+        ->name('sesi.destroy');
 });

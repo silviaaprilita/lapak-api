@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\StatusAkun;
 use Database\Factories\PenggunaFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Laravel\Sanctum\HasApiTokens;
@@ -37,6 +38,12 @@ final class Pengguna extends Authenticatable
      */
     public function toko(): HasOne
     {
-        return $this->hasOne(Toko::class, 'pengguna_id');
+        return $this->hasOne(Toko::class, 'pemilik_id');
+    }
+
+    public function peran(): BelongsToMany
+    {
+        return $this->belongsToMany(Peran::class, 'pengguna_peran')
+            ->withPivot('diberikan_oleh');
     }
 }

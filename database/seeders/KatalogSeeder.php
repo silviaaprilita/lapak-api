@@ -2,8 +2,11 @@
 
 namespace Database\Seeders;
 
-use App\Models\Barang;
+use App\Enums\StatusProduk;
+use App\Enums\StatusToko;
+use App\Models\Kategori;
 use App\Models\Pengguna;
+use App\Models\Produk;
 use App\Models\Toko;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
@@ -41,6 +44,11 @@ class KatalogSeeder extends Seeder
 
     public function run(): void
     {
+        $kategori = Kategori::firstOrCreate(
+            ['slug' => 'umum'],
+            ['nama' => 'Umum']
+        );
+
         foreach (self::DATA_KATALOG as $surel => $info) {
             $pemilik = Pengguna::where('surel', $surel)->first();
 
@@ -49,29 +57,28 @@ class KatalogSeeder extends Seeder
             }
 
             // Daftarkan toko UMKM
-            $toko = Toko::updateOrCreate(
-                ['pengguna_id' => $pemilik->id],
-                [
-                    'nama' => $info['nama_toko'],
-                    'slug' => Str::slug($info['nama_toko']),
-                    'deskripsi' => $info['deskripsi_toko'],
-                ]
-            );
+            $toko = Toko::firstOrNew(['slug' => Str::slug($info['nama_toko'])]);
+            $toko->forceFill([
+                'pemilik_id' => $pemilik->id,
+                'nama' => $info['nama_toko'],
+                'kota' => 'Surakarta',
+                'ongkir_rupiah' => 12000,
+                'status' => StatusToko::Aktif,
+                'deskripsi' => $info['deskripsi_toko'],
+            ])->save();
 
-            // Isikan produk ke toko tersebut
             foreach ($info['barang'] as [$nama, $deskripsi, $harga, $stok]) {
-                Barang::updateOrCreate(
-                    [
-                        'toko_id' => $toko->id,
-                        'nama' => $nama,
-                    ],
-                    [
-                        'slug' => Str::slug($nama),
-                        'deskripsi' => $deskripsi,
-                        'harga_rupiah' => $harga,
-                        'stok' => $stok,
-                    ]
-                );
+                $produk = Produk::firstOrNew(['slug' => Str::slug($nama)]);
+                $produk->forceFill([
+                    'toko_id' => $toko->id,
+                    'kategori_id' => $kategori->id,
+                    'nama' => $nama,
+                    'deskripsi' => $deskripsi,
+                    'harga_rupiah' => $harga,
+                    'stok' => $stok,
+                    'berat_gram' => 500,
+                    'status' => StatusProduk::Aktif,
+                ])->save();
             }
         }
     }

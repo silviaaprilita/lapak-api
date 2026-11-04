@@ -42,9 +42,9 @@ final class DompetController extends Controller
 
             // 4. Cari atau buat dompet milik toko/penjual tujuan
             $dompetPenjual = Dompet::firstOrCreate(
-                ['pengguna_id' => $pesanan->toko->pengguna_id],
+                ['pengguna_id' => $pesanan->toko->pemilik_id],
                 [
-                    'kode' => 'penjual:'.$pesanan->toko->pengguna_id,
+                    'kode' => 'penjual:'.$pesanan->toko->pemilik_id,
                     'jenis' => JenisDompet::Penjual,
                     'saldo_rupiah' => 0,
                 ]

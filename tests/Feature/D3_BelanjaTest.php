@@ -1,22 +1,21 @@
 <?php
 
-use App\Models\Barang;
 use App\Models\Pengguna;
+use App\Models\Produk;
 use App\Models\Toko;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
 it('pembeli dapat memasukkan produk katalog ke dalam keranjang (LP-7)', function () {
-    // 1. Siapkan data penjual, toko, dan produk
+    // 1. Siapkan data toko dan produk
     $penjual = Pengguna::factory()->penjual()->create();
     $toko = Toko::factory()->for($penjual, 'pemilik')->create([
         'nama' => 'Oleh-oleh Solo Asli',
         'slug' => 'oleh-oleh-solo-asli',
     ]);
 
-    $barang = Barang::create([
-        'toko_id' => $toko->id,
+    $produk = Produk::factory()->for($toko)->create([
         'nama' => 'Serabi Lezat',
         'slug' => 'serabi-lezat',
         'deskripsi' => 'Serabi Solo.',
@@ -24,24 +23,20 @@ it('pembeli dapat memasukkan produk katalog ke dalam keranjang (LP-7)', function
         'stok' => 50,
     ]);
 
-    // 2. Masuk sebagai akun pembeli
+    // 2. Masuk sebagai akun pembeli menggunakan $this->sebagai
     $pembeli = Pengguna::factory()->pembeli()->create();
 
-    // 3. Masukkan barang ke keranjang
+    // 3. Masukkan ke keranjang
     $response = $this->sebagai($pembeli)->postJson('/api/v1/keranjang', [
-        'barang_id' => $barang->id,
+        'produk_id' => $produk->id,
         'kuantitas' => 2,
     ]);
 
-    // 4. Pastikan status 200 OK
-    $response->assertStatus(200)
-        ->assertJson([
-            'sukses' => true,
-        ]);
-
-    $this->assertDatabaseHas('keranjang', [
+    // 4. Pastikan status 200 OK dan item tercatat
+    $response->assertOk()->assertJson(['sukses' => true]);
+    $this->assertDatabaseHas('butir_keranjang', [
         'pengguna_id' => $pembeli->id,
-        'barang_id' => $barang->id,
+        'produk_id' => $produk->id,
         'kuantitas' => 2,
     ]);
 });
@@ -49,18 +44,12 @@ it('pembeli dapat memasukkan produk katalog ke dalam keranjang (LP-7)', function
 it('menolak penambahan kuantitas keranjang jika melebihi batas maksimum 99', function () {
     $penjual = Pengguna::factory()->penjual()->create();
     $toko = Toko::factory()->for($penjual, 'pemilik')->create();
-    $barang = Barang::create([
-        'toko_id' => $toko->id,
-        'nama' => 'Snack',
-        'slug' => 'snack',
-        'harga_rupiah' => 5000,
-        'stok' => 200,
-    ]);
+    $produk = Produk::factory()->for($toko)->create(['harga_rupiah' => 5000, 'stok' => 200]);
 
     $pembeli = Pengguna::factory()->pembeli()->create();
 
     $response = $this->sebagai($pembeli)->postJson('/api/v1/keranjang', [
-        'barang_id' => $barang->id,
+        'produk_id' => $produk->id,
         'kuantitas' => 100,
     ]);
 
@@ -68,22 +57,16 @@ it('menolak penambahan kuantitas keranjang jika melebihi batas maksimum 99', fun
 });
 
 it('pembeli dapat membuat pesanan resmi dari barang di keranjang (LP-8, LP-9, LP-10)', function () {
-    // 1. Siapkan toko, produk, dan pembeli yang memiliki item di keranjang
+    // 1. Siapkan toko, produk, dan pembeli
     $penjual = Pengguna::factory()->penjual()->create();
     $toko = Toko::factory()->for($penjual, 'pemilik')->create();
-    $barang = Barang::create([
-        'toko_id' => $toko->id,
-        'nama' => 'Batik',
-        'slug' => 'batik',
-        'harga_rupiah' => 200000,
-        'stok' => 10,
-    ]);
+    $produk = Produk::factory()->for($toko)->create(['harga_rupiah' => 200000, 'stok' => 10]);
 
     $pembeli = Pengguna::factory()->pembeli()->create();
 
-    // Masukkan barang ke keranjang
+    // Masukkan barang ke keranjang pembeli terlebih dahulu
     $this->sebagai($pembeli)->postJson('/api/v1/keranjang', [
-        'barang_id' => $barang->id,
+        'produk_id' => $produk->id,
         'kuantitas' => 2,
     ]);
 

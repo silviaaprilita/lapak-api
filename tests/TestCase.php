@@ -5,12 +5,20 @@ namespace Tests;
 use App\Models\Pengguna;
 use App\Models\Sesi;
 use App\Services\PenerbitSesi;
+use Database\Seeders\PeranIzinSeeder;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
     /** Sesi yang diterbitkan pemanggilan sebagai() terakhir. */
     protected ?Sesi $sesiUji = null;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(PeranIzinSeeder::class);
+    }
 
     /**
      * Masuk sebagai seorang pengguna dengan kunci sesi SUNGGUHAN.

@@ -22,7 +22,7 @@ it('dapat mendaftarkan pengguna baru dengan data valid (LP-2)', function () {
                 'status' => StatusAkun::Aktif->value,
             ],
         ])
-        ->assertJsonStructure(['data' => ['id']])
+        ->assertJsonStructure(['data' => ['id', 'status']])
         ->assertJsonMissingPath('data.kata_sandi');
 
     // Memastikan data benar-benar masuk ke database MySQL
@@ -34,6 +34,7 @@ it('dapat mendaftarkan pengguna baru dengan data valid (LP-2)', function () {
     // Memastikan kata sandi aman ter-hash (tidak disimpan sebagai teks polos)
     $pengguna = Pengguna::where('surel', 'silvia@student.uns.ac.id')->first();
     expect(Hash::check('PasswordSilvia#2026', $pengguna->kata_sandi))->toBeTrue();
+    expect($pengguna->peran()->where('nama', 'pembeli')->exists())->toBeTrue();
 });
 
 it('menolak pendaftaran jika surel sudah terdaftar (LP-2)', function () {

@@ -1,17 +1,14 @@
 <?php
 
-use App\Models\Barang;
+use App\Models\Kategori;
 use App\Models\Pengguna;
 use App\Models\Toko;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-
-uses(RefreshDatabase::class);
 
 it('pembeli dapat membuka toko baru (LP-4)', function () {
-    // 1. Siapkan pengguna pembeli terdaftar yang belum punya toko
+    // 1. Siapkan pengguna terdaftar dengan peran pembeli
     $pembeli = Pengguna::factory()->pembeli()->create();
 
-    // 2. Simulasikan pengguna masuk menggunakan helper autentikasi sesi
+    // 2. Kirim request membuat toko menggunakan autentikasi sesi ($this->sebagai)
     $response = $this->sebagai($pembeli)->postJson('/api/v1/toko-saya', [
         'nama' => 'Keripik Solo Makmur',
         'kota' => 'Surakarta',
@@ -19,7 +16,7 @@ it('pembeli dapat membuka toko baru (LP-4)', function () {
         'deskripsi' => 'Sentra keripik renyah rasa gurih asli Surakarta.',
     ]);
 
-    // 3. Pastikan statusnya 201 Created dan data masuk database
+    // 3. Pastikan status 201 Created dan data masuk basis data
     $response->assertStatus(201)
         ->assertJson([
             'sukses' => true,
@@ -29,7 +26,7 @@ it('pembeli dapat membuka toko baru (LP-4)', function () {
         ]);
 
     $this->assertDatabaseHas('toko', [
-        'pengguna_id' => $pembeli->id,
+        'pemilik_id' => $pembeli->id,
         'nama' => 'Keripik Solo Makmur',
         'kota' => 'Surakarta',
         'ongkir_rupiah' => 12000,
@@ -57,13 +54,16 @@ it('pemilik toko dapat menambahkan barang baru ke katalognya (LP-5)', function (
         'nama' => 'Batik Silvia Keren',
         'slug' => 'batik-silvia-keren',
     ]);
+    $kategori = Kategori::factory()->create();
 
-    // 2. Tambah barang baru lewat rute toko milik pengguna
-    $response = $this->sebagai($penjual)->postJson('/api/v1/toko-saya/barang', [
+    // 2. Tambah produk baru dengan autentikasi sesi
+    $response = $this->sebagai($penjual)->postJson('/api/v1/toko-saya/produk', [
+        'kategori_id' => $kategori->id,
         'nama' => 'Kemeja Solo Estetik',
         'deskripsi' => 'Kemeja kain premium cap solo.',
         'harga_rupiah' => 150000,
         'stok' => 25,
+        'berat_gram' => 400,
     ]);
 
     // 3. Pastikan tersimpan dengan format amplop respons yang benar
@@ -72,11 +72,13 @@ it('pemilik toko dapat menambahkan barang baru ke katalognya (LP-5)', function (
             'sukses' => true,
             'data' => [
                 'nama' => 'Kemeja Solo Estetik',
-                'harga_rupiah' => 150000,
+                'harga' => [
+                    'rupiah' => 150000,
+                ],
             ],
         ]);
 
-    $this->assertDatabaseHas('barang', [
+    $this->assertDatabaseHas('produk', [
         'toko_id' => $toko->id,
         'nama' => 'Kemeja Solo Estetik',
         'harga_rupiah' => 150000,

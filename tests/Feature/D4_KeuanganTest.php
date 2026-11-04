@@ -21,7 +21,6 @@ it('dapat melepaskan dana transaksi ke dompet penjual setelah pesanan selesai (L
 
     // 2. Siapkan Akun Pembeli dan Transaksi Pesanan yang sudah dibayar
     $pembeli = Pengguna::factory()->pembeli()->create();
-
     $pesanan = Pesanan::create([
         'nomor_invoice' => 'INV-TEST-001',
         'pembeli_id' => $pembeli->id,
@@ -43,7 +42,6 @@ it('dapat melepaskan dana transaksi ke dompet penjual setelah pesanan selesai (L
                 'status_pesanan' => 'selesai',
             ],
         ]);
-
     // 5. Pastikan saldo dompet penjual bertambah Rp 190.000 (Rp 200.000 - Rp 10.000)
     expect($dompetPenjual->fresh()->saldo_rupiah)->toBe(190000);
 
